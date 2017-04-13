@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+
+require('route-injector').start(function () {
+});

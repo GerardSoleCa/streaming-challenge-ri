@@ -1,0 +1,12 @@
+{
+  "name": "StreamingChallenge",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www --name='StreamingChallenge'"
+  },
+  "dependencies": {
+    "mongoose": "4.8.4",
+    "route-injector": "2.1.x"
+  }
+}
