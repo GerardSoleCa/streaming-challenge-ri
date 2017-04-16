@@ -2,6 +2,7 @@ let Q = require('q');
 let injector = require('route-injector');
 let mongoose = require('mongoose');
 let ObjectId = mongoose.Types.ObjectId;
+let CryptoBox = require('../utils/cryptoBox');
 
 mongoose.Promise = Q.Promise;
 
@@ -34,7 +35,7 @@ function StreamingUseCase(deviceId, contentId) {
     this.getQueryPromises = () => {
         if (this.checkValidIds()) {
             let devicePromise = injector.models.Device.findOne({_id: ObjectId(this.deviceId)}).exec();
-            let contentPromise = injector.models.Content.findOne({_id: ObjectId(this.contentId)}).exec();
+            let contentPromise = injector.models.Content.findOne({_id: ObjectId(this.contentId)}).populate('protectionSystem').exec();
             return [devicePromise, contentPromise];
         } else {
             this.deferred.reject('ObjectId is not valid');
@@ -54,7 +55,7 @@ function StreamingUseCase(deviceId, contentId) {
         console.log("checkProtection", docs);
         let device = docs[0];
         let content = docs[1];
-        if (device.protectionSystem.toString() !== content.protectionSystem.toString()) {
+        if (device.protectionSystem.toString() !== content.protectionSystem._id.toString()) {
             throw new Error('Protection System does not match');
         } else {
             return content;
@@ -64,7 +65,8 @@ function StreamingUseCase(deviceId, contentId) {
     this.decryptContentPayload = (content) => {
         let key = content.encryptionKey;
         let payload = content.payload;
-        this.deferred.resolve(key + payload);
+        let algorithm = content.protectionSystem.algorithm;
+        this.deferred.resolve(new CryptoBox(algorithm, key).decrypt(payload));
     }
 
     this.checkValidIds = () => {

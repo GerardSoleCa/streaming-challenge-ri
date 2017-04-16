@@ -1,3 +1,5 @@
+let hooks = require('./hooks');
+
 module.exports = {
     "id": "_id",
     "displayField": "name",
@@ -6,8 +8,20 @@ module.exports = {
     "path": "content",
     "plural": "contents",
     "get": {},
-    "post": {},
-    "put": {},
+    "post": {
+        profiles: {
+            _default: {
+                pre: [hooks.encrypt]
+            }
+        }
+    },
+    "put": {
+        profiles: {
+            _default: {
+                pre: [hooks.encrypt]
+            }
+        }
+    },
     "delete": {},
     "search": {},
     "form": {}
