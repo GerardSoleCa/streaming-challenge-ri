@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "mongoose": "4.8.4",
-    "route-injector": "2.1.x"
+    "q": "^1.5.0",
+    "route-injector": "2.1.x",
+    "when": "^3.7.8"
   }
 }
