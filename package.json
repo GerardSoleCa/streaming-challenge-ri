@@ -3,9 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www --name='StreamingChallenge'"
+    "start": "node ./bin/www --name='StreamingChallenge'",
+    "test": "$(npm bin)/mocha **/*.spec.js"
   },
   "dependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
     "mongoose": "4.8.4",
     "q": "^1.5.0",
     "route-injector": "2.1.x",
