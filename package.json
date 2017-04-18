@@ -4,14 +4,20 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www --name='StreamingChallenge'",
-    "test": "$(npm bin)/mocha **/*.spec.js"
+    "test": "nyc --reporter=html --reporter=text mocha **/*.spec.js",
+    "simple-test": "mocha **/*.spec.js",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
     "mongoose": "4.8.4",
     "q": "^1.5.0",
-    "route-injector": "2.1.x",
-    "when": "^3.7.8"
+    "route-injector": "2.1.x"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "chai-http": "^3.0.0",
+    "coveralls": "^2.13.0",
+    "nyc": "^10.2.0"
   }
 }
