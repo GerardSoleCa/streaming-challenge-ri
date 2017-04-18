@@ -18,18 +18,11 @@ function StreamingUseCase(deviceId, contentId) {
     };
 
     this.resolveDataFromDB = () => {
-        // if (!this.validIds()) {
-        //     this.deferred.reject();
-        //     return;
-        // }
-
-
         Q.all(this.getQueryPromises())
             .then(this.checkQueryResult)
             .then(this.checkProtectionSystemValidity)
             .then(this.decryptContentPayload)
             .fail(this.catchError)
-
     };
 
     this.getQueryPromises = () => {
@@ -40,7 +33,7 @@ function StreamingUseCase(deviceId, contentId) {
         } else {
             this.deferred.reject('ObjectId is not valid');
         }
-    }
+    };
 
     this.checkQueryResult = (docs) => {
         if (docs[0] && docs[1]) {
@@ -67,7 +60,7 @@ function StreamingUseCase(deviceId, contentId) {
         let payload = content.payload;
         let algorithm = content.protectionSystem.algorithm;
         this.deferred.resolve(new CryptoBox(algorithm, key).decrypt(payload));
-    }
+    };
 
     this.checkValidIds = () => {
         return !!(ObjectId.isValid(this.deviceId) && ObjectId.isValid(this.contentId));
@@ -75,7 +68,7 @@ function StreamingUseCase(deviceId, contentId) {
 
     this.catchError = (error) => {
         this.deferred.reject(error);
-    }
+    };
 
 
 }
