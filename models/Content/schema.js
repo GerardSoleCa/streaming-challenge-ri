@@ -7,9 +7,9 @@ var jsonform = require('route-injector').MongooseJsonform;
 
 var schema = new Schema({
     name: {type: String, required: true},
-    encryptionKey: {type: String},
+    encryptionKey: {type: String, required: true},
     protectionSystem: {type: ObjectId, ref: 'ProtectionSystem', required: true},
-    payload: {type: String}
+    payload: {type: String, required: true}
 }, {id: false});
 
 schema.plugin(jsonform, {
