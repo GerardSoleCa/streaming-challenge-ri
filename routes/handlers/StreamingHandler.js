@@ -27,7 +27,7 @@ function StreamingHandler() {
     };
 
     this.send = (status, msg) => {
-        this.res.status = status;
+        this.res.statusCode = status;
         this.res.json(msg);
         this.res.end();
     }
