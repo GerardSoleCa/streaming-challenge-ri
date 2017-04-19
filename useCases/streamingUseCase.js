@@ -45,7 +45,6 @@ function StreamingUseCase(deviceId, contentId) {
 
 
     this.checkProtectionSystemValidity = (docs) => {
-        console.log("checkProtection", docs);
         let device = docs[0];
         let content = docs[1];
         if (device.protectionSystem.toString() !== content.protectionSystem._id.toString()) {
