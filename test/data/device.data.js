@@ -9,5 +9,12 @@ class DeviceData {
             protectionSystem: protectionSystemId
         }
     }
+
+    static getSecondDeviceData(protectionSystemId) {
+        return {
+            name: 'LG 4K',
+            protectionSystem: protectionSystemId
+        }
+    }
 }
 module.exports = DeviceData;

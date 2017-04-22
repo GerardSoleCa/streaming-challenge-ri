@@ -11,14 +11,14 @@ module.exports = {
     "post": {
         profiles: {
             _default: {
-                pre: [hooks.failOnEmpty, hooks.encrypt]
+                pre: [hooks.validate, hooks.encrypt]
             }
         }
     },
     "put": {
         profiles: {
             _default: {
-                pre: [hooks.failOnEmpty, hooks.encrypt]
+                pre: [hooks.validate, hooks.encrypt]
             }
         }
     },
