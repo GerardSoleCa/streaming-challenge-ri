@@ -26,7 +26,7 @@ describe('API', () => {
         })
     });
 
-    describe('CRUD', () => {
+    describe('Create, Read, Update', () => {
 
         describe('Protection System', () => {
 
@@ -90,6 +90,32 @@ describe('API', () => {
                 });
             });
 
+            describe('PUT /protectionSystem/:id', () => {
+                it('should update protection system', (done) => {
+                    chai.request(server)
+                        .put('/protectionSystem/' + protectionSystemId)
+                        .send({
+                            description: 'AES-256-CBC'
+                        })
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('_id').eql(protectionSystemId);
+                            done();
+                        });
+                });
+
+                it('should description property have been updated', (done) => {
+                    chai.request(server)
+                        .get('/protectionSystem/' + protectionSystemId)
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('description').eql('AES-256-CBC');
+                            done();
+                        });
+                });
+            });
         });
 
         describe('Device', () => {
@@ -149,6 +175,33 @@ describe('API', () => {
                             res.should.have.status(200);
                             res.body.should.be.a('object');
                             res.body.should.have.property('_id').eql(deviceId);
+                            done();
+                        });
+                });
+            });
+
+            describe('PUT /device/:id', () => {
+                it('should update device', (done) => {
+                    chai.request(server)
+                        .put('/device/' + deviceId)
+                        .send({
+                            name: 'iPhone-5S'
+                        })
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('_id').eql(deviceId);
+                            done();
+                        });
+                });
+
+                it('should description property have been updated', (done) => {
+                    chai.request(server)
+                        .get('/device/' + deviceId)
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('name').eql('iPhone-5S');
                             done();
                         });
                 });
@@ -245,6 +298,34 @@ describe('API', () => {
                         });
                 });
             });
+
+            describe('PUT /content/:id', () => {
+                it('should update content', (done) => {
+                    chai.request(server)
+                        .put('/content/' + contentId)
+                        .send({
+                            name: 'The quick brown fox'
+                        })
+                        .end((err, res) => {
+                            console.log(res.body);
+                            res.should.have.status(200);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('_id').eql(contentId);
+                            done();
+                        });
+                });
+
+                it('should description property have been updated', (done) => {
+                    chai.request(server)
+                        .get('/content/' + contentId)
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('name').eql('The quick brown fox');
+                            done();
+                        });
+                });
+            });
         });
     });
 
@@ -316,7 +397,68 @@ describe('API', () => {
                         });
                 });
         });
+    });
 
+    describe('Delete', () => {
+        describe('Content', () => {
+            it('should delete content', (done) => {
+                chai.request(server)
+                    .delete('/content/' + contentId)
+                    .end((err, res) => {
+                        res.should.have.status(204);
+                        done();
+                    });
+            });
+
+            it('device should be deleted', (done) => {
+                chai.request(server)
+                    .get('/content/' + contentId)
+                    .end((err, res) => {
+                        res.should.have.status(404);
+                        done();
+                    });
+            });
+        });
+
+        describe('Device', () => {
+            it('should delete device', (done) => {
+                chai.request(server)
+                    .delete('/device/' + deviceId)
+                    .end((err, res) => {
+                        res.should.have.status(204);
+                        done();
+                    });
+            });
+
+            it('device should be deleted', (done) => {
+                chai.request(server)
+                    .get('/device/' + deviceId)
+                    .end((err, res) => {
+                        res.should.have.status(404);
+                        done();
+                    });
+            });
+        });
+
+        describe('Protection System', () => {
+            it('should delete device', (done) => {
+                chai.request(server)
+                    .delete('/protectionSystem/' + protectionSystemId)
+                    .end((err, res) => {
+                        res.should.have.status(204);
+                        done();
+                    });
+            });
+
+            it('Protection System should be deleted', (done) => {
+                chai.request(server)
+                    .get('/protectionSystem/' + protectionSystemId)
+                    .end((err, res) => {
+                        res.should.have.status(404);
+                        done();
+                    });
+            });
+        });
     });
 
     after(() => {

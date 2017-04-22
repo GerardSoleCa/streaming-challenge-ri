@@ -18,7 +18,7 @@ module.exports = {
     "put": {
         profiles: {
             _default: {
-                pre: [hooks.validate, hooks.encrypt]
+                pre: [hooks.encrypt]
             }
         }
     },

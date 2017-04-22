@@ -11,6 +11,8 @@ module.exports.validate = function (Model, req, res, next) {
 };
 
 module.exports.encrypt = function (Model, req, res, next) {
+    if (req.method === 'PUT' && !req.body.protectionSystem)
+        return next();
     injector.models.ProtectionSystem.findById(req.body.protectionSystem, {algorithm: 1}, (err, doc) => {
 
         if (err) {
