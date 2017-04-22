@@ -164,7 +164,6 @@ describe('API', () => {
                         .post('/content')
                         .send(content)
                         .end((err, res) => {
-                            console.log(res.body)
                             res.should.have.status(403);
                             res.body.should.be.a('object');
                             res.body.should.have.property('errors');
@@ -178,11 +177,39 @@ describe('API', () => {
                         .post('/content')
                         .send(content)
                         .end((err, res) => {
-                            console.log(res.body)
                             res.should.have.status(201);
                             res.body.should.be.a('object');
                             res.body.should.have.property('_id');
                             contentId = res.body._id;
+                            done();
+                        });
+                });
+
+                it('should fail on POST a content with invalid protection system', (done) => {
+                    let content = ContentData.getContentData('58f0e0b23371d846b11e0bef');
+                    chai.request(server)
+                        .post('/content')
+                        .send(content)
+                        .end((err, res) => {
+                            res.should.have.status(400);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('errors');
+                            done();
+                        });
+                });
+
+                it('should handle mongo error on Content Hook', (done) => {
+                    let findById = injector.models.ProtectionSystem.findById;
+                    injector.models.ProtectionSystem.findById = function (a, b, cb) {
+                        cb(new Error('fail'));
+                    };
+                    let content = ContentData.getContentData(protectionSystemId);
+                    chai.request(server)
+                        .post('/content')
+                        .send(content)
+                        .end((err, res) => {
+                            res.should.have.status(500);
+                            injector.models.ProtectionSystem.findById = findById;
                             done();
                         });
                 });
