@@ -21,8 +21,10 @@ module.exports.encrypt = function (Model, req, res, next) {
         }
 
         if (!doc) {
-            res.statusCode = 404;
-            return res.end();
+            res.statusCode = 400;
+            return res.json({
+                errors: 'Protection system not found'
+            }).end();
         }
 
         let cipher = new CryptoBox(doc.algorithm, req.body.encryptionKey);
