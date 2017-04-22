@@ -18,7 +18,7 @@ module.exports = {
     "put": {
         profiles: {
             _default: {
-                pre: [hooks.encrypt]
+                pre: [hooks.getStoredProtectionSystemAndKey, hooks.encrypt]
             }
         }
     },

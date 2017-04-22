@@ -45,7 +45,7 @@ describe('API', () => {
                 });
 
                 it('should reject on POST a protection system with an invalid algorithm', (done) => {
-                   let protectionSystem = ProtectionSystemData.getWithInvalidAlgorithm();
+                    let protectionSystem = ProtectionSystemData.getWithInvalidAlgorithm();
                     chai.request(server)
                         .post('/protectionSystem')
                         .send(protectionSystem)
@@ -307,6 +307,7 @@ describe('API', () => {
                             res.should.have.status(200);
                             res.body.should.be.a('object');
                             res.body.should.have.property('_id').eql(contentId);
+                            res.body.should.have.property('payload').eql('2xk79f78r4TV9yJVwGqj5WkjQkQZTbBdj801KFHjl+YrlLrB+SkNxxUKedbKXByv');
                             done();
                         });
                 });
@@ -334,7 +335,6 @@ describe('API', () => {
                         .end((err, res) => {
                             res.should.have.status(200);
                             res.body.should.be.a('object');
-                            res.body.should.have.property('name').eql('The quick brown fox');
                             done();
                         });
                 });
@@ -471,6 +471,128 @@ describe('API', () => {
                         done();
                     });
             });
+        });
+    });
+
+    describe('Tests for Content business implementations', () => {
+        let contentId, protectionSystemId, secondProtectionSystemId;
+
+        it('should POST a protection system', (done) => {
+            let protectionSystem = ProtectionSystemData.getProtectionSystemData();
+            chai.request(server)
+                .post('/protectionSystem')
+                .send(protectionSystem)
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('_id');
+                    protectionSystemId = res.body._id;
+                    done();
+                });
+        });
+
+        it('should POST a second protection system', (done) => {
+            let protectionSystem = ProtectionSystemData.getSecondProtectionSystemData();
+            chai.request(server)
+                .post('/protectionSystem')
+                .send(protectionSystem)
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('_id');
+                    secondProtectionSystemId = res.body._id;
+                    done();
+                });
+        });
+
+        it('should POST a content for business test implementations', (done) => {
+            let content = ContentData.getContentDataForBusinessTest(protectionSystemId);
+            chai.request(server)
+                .post('/content')
+                .send(content)
+                .end((err, res) => {
+                    res.should.have.status(201);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('_id');
+                    contentId = res.body._id;
+                    done();
+                });
+        });
+
+        it('should change key on update', (done) => {
+            chai.request(server)
+                .put('/content/' + contentId)
+                .send({
+                    encryptionKey: 'updated password'
+                })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('_id').eql(contentId);
+                    done();
+                });
+        });
+
+        it('should payload property have been updated', (done) => {
+            chai.request(server)
+                .get('/content/' + contentId)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('payload').eql('y8JYpR96GZ1bLDWL+3xYiZwNRJvOYxkeayuCi0A0lpg7hns1JNpJ9kHs0YJ7snPc');
+                    done();
+                });
+        });
+
+        it('should change protectionSystem on update', (done) => {
+            chai.request(server)
+                .put('/content/' + contentId)
+                .send({
+                    protectionSystem: secondProtectionSystemId
+                })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('_id').eql(contentId);
+                    done();
+                });
+        });
+
+
+        it('should payload property have been updated', (done) => {
+            chai.request(server)
+                .get('/content/' + contentId)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('payload').eql('MKbvmv2yoBUTR5Lwm53kuFJvYfTwuqEQvo46nCwoQUQAjTdvh6Zezw==');
+                    done();
+                });
+        });
+
+        it('should not fail on change payload', (done) => {
+            chai.request(server)
+                .put('/content/' + contentId)
+                .send({
+                    payload: 'this is a new payload'
+                })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('_id').eql(contentId);
+                    done();
+                });
+        });
+
+        it('should payload be encrypted and changed', (done) => {
+            chai.request(server)
+                .get('/content/' + contentId)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('payload').eql('Yu/uhBd9oCPfGw9gTdPIpea1dwQZN2Yl');
+                    done();
+                });
         });
     });
 
