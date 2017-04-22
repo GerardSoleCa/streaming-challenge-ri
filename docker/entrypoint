@@ -1,0 +1,31 @@
+#!/bin/bash
+
+function wait {
+    echo -n "waiting for TCP connection to $1:$2..."
+    while ! nc -w 1 $1 $2 2>/dev/null
+    do
+        echo -n .
+        sleep 1
+    done
+    echo 'ok'
+}
+
+function startup {
+    list=$(env | grep DOCKER_ | grep _TCP= | cut -d = -f 2)
+    elems=($list)
+
+    for key in "${!elems[@]}"
+    do
+        str=${elems[$key]}
+        str2=${str#"tcp://"}
+        IFS=:
+            array=($str2)
+        unset IFS
+        host=${array[0]}
+        port=${array[1]}
+        wait $host $port
+    done
+}
+
+startup
+npm start
