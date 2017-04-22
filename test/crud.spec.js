@@ -44,6 +44,19 @@ describe('API', () => {
                         });
                 });
 
+                it('should reject on POST a protection system with an invalid algorithm', (done) => {
+                   let protectionSystem = ProtectionSystemData.getWithInvalidAlgorithm();
+                    chai.request(server)
+                        .post('/protectionSystem')
+                        .send(protectionSystem)
+                        .end((err, res) => {
+                            res.should.have.status(400);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('errors').eql('algorithm is not valid');
+                            done();
+                        });
+                });
+
                 it('should POST a protection system', (done) => {
                     let protectionSystem = ProtectionSystemData.getProtectionSystemData();
                     chai.request(server)

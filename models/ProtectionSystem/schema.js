@@ -1,13 +1,12 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
-var injector = require('route-injector').MongooseInjector;
-var jsonform = require('route-injector').MongooseJsonform;
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+let injector = require('route-injector').MongooseInjector;
+let jsonform = require('route-injector').MongooseJsonform;
 
 
-var schema = new Schema({
+let schema = new Schema({
     description: {type: String, required: true},
-    algorithm: {type: String, required: true, readonly: true}
+    algorithm: {type: String, required: true}
 }, {id: false});
 
 schema.plugin(jsonform, {

@@ -1,11 +1,11 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
-var injector = require('route-injector').MongooseInjector;
-var jsonform = require('route-injector').MongooseJsonform;
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+let ObjectId = Schema.ObjectId;
+let injector = require('route-injector').MongooseInjector;
+let jsonform = require('route-injector').MongooseJsonform;
 
 
-var schema = new Schema({
+let schema = new Schema({
     name: {type: String, required: true},
     encryptionKey: {type: String, required: true},
     protectionSystem: {type: ObjectId, ref: 'ProtectionSystem', required: true},
