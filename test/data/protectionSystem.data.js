@@ -17,5 +17,11 @@ class ProtectionSystemData {
         }
     }
 
+    static getWithInvalidAlgorithm() {
+        return {
+            description: 'Invalid',
+            algorithm: 'this is an invalid algorithm'
+        }
+    }
 }
 module.exports = ProtectionSystemData;

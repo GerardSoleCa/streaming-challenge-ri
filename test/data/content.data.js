@@ -13,6 +13,15 @@ class ContentData {
         }
     }
 
+    static getContentDataForBusinessTest(protectionSystemId){
+        return {
+            name: 'The test data',
+            encryptionKey: 'this is a large password',
+            protectionSystem: protectionSystemId,
+            payload: 'the brown fox jumps over the lazy dog'
+        }
+    }
+
     static getDecryptedPayload() {
         return ContentData.getContentData().payload;
     }
