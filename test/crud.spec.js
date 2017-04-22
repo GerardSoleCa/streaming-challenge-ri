@@ -45,7 +45,7 @@ describe('API', () => {
                 });
 
                 it('should POST a protection system', (done) => {
-                    let protectionSystem = ProtectionSystemData.getMockData();
+                    let protectionSystem = ProtectionSystemData.getProtectionSystemData();
                     chai.request(server)
                         .post('/protectionSystem')
                         .send(protectionSystem)
@@ -264,6 +264,29 @@ describe('API', () => {
                     res.body.should.be.a('object');
                     res.body.should.have.property('payload').eql(ContentData.getDecryptedPayload());
                     done();
+                });
+        });
+
+        it('should fail on non-matching protection system', (done) => {
+            let protectionSystem = ProtectionSystemData.getSecondProtectionSystemData();
+            chai.request(server)
+                .post('/protectionSystem')
+                .send(protectionSystem)
+                .end((err, res) => {
+                    let deviceData = DeviceData.getSecondDeviceData(res.body._id);
+                    chai.request(server)
+                        .post('/device')
+                        .send(deviceData)
+                        .end((err, res) => {
+                            chai.request(server)
+                                .get(`/streaming/device/${res.body._id}/content/${contentId}`)
+                                .end((err, res) => {
+                                    res.should.have.status(400);
+                                    res.body.should.be.a('object');
+                                    res.body.should.have.property('error');
+                                    done();
+                                });
+                        });
                 });
         });
 

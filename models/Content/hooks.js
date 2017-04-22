@@ -1,8 +1,8 @@
 let CryptoBox = require('../../utils/cryptoBox');
 let injector = require('route-injector');
 
-module.exports.failOnEmpty = function (Model, req, res, next) {
-    let errors = isValid(req.body);
+module.exports.validate = function (Model, req, res, next) {
+    let errors = getValidationErrors(req.body);
     if (errors) {
         res.statusCode = 403;
         return res.json(errors).end();
@@ -32,7 +32,7 @@ module.exports.encrypt = function (Model, req, res, next) {
     })
 };
 
-function isValid(body) {
+function getValidationErrors(body) {
     let content = new injector.models.Content(body);
     return content.validateSync();
 }
